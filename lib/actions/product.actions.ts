@@ -13,7 +13,7 @@ export async function getLatestProducts() {
   return data.map((product) => ({
     ...product,
     price: product.price.toString(),
-    rating: product.price.toString(),
+    rating: product.rating.toString(),
   }));
 }
 

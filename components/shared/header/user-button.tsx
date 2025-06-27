@@ -33,7 +33,7 @@ async function UserButton() {
           <div className="flex items-center">
             <Button
               variant="ghost"
-              className="relative w-8 h-8 rounded-full ml-2 flex items-center justify-center bg-gray-300"
+              className="relative w-8 h-8 rounded-full ml-2 flex items-center justify-center bg-gray-300 cursor-pointer"
             >
               {firstInitial}
             </Button>
@@ -51,7 +51,10 @@ async function UserButton() {
 
           <DropdownMenuItem className="p-0 mb-1">
             <form action={signOutUser} className="w-full">
-              <Button className="w-full py-4 px-2 h-4 justify-start" variant="ghost">
+              <Button
+                className="w-full py-4 px-2 h-4 justify-start cursor-pointer"
+                variant="ghost"
+              >
                 Sign Out
               </Button>
             </form>

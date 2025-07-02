@@ -34,7 +34,7 @@ async function SignUpPage({
     <div className="w-full max-w-md mx-auto">
       <Card>
         <CardHeader className="space-y-4">
-          <Link href="/" className="flex-center">
+          <Link href="/" className="flex-center w-fit mx-auto">
             <Image
               priority={true}
               src="/images/logo.svg"

@@ -5,12 +5,15 @@ import { notFound } from "next/navigation";
 import ProductPrice from "@/components/shared/product/product-price";
 import ProductImages from "@/components/shared/product/product-images";
 import AddToCart from "@/components/shared/product/add-to-card";
+import { getMyCart } from "@/lib/actions/cart.actions";
 
 async function ProductDetailsPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
 
   const product = await getProductBySlug(slug);
   if (!product) notFound();
+
+  const cart = await getMyCart();
 
   return (
     <>
@@ -46,8 +49,8 @@ async function ProductDetailsPage({ params }: { params: Promise<{ slug: string }
           </div>
           {/* Action Column */}
           <div>
-            <Card>
-              <CardContent className="p-4">
+            <Card className="py-4">
+              <CardContent className="px-4">
                 <div className="mb-2 flex justify-between">
                   <div>Price</div>
                   <div>
@@ -65,6 +68,7 @@ async function ProductDetailsPage({ params }: { params: Promise<{ slug: string }
                 {product.stock > 0 && (
                   <div className=" flex-center">
                     <AddToCart
+                      cart={cart}
                       item={{
                         productId: product.id,
                         name: product.name,

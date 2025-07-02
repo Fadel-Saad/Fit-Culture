@@ -1,5 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import Decimal from "decimal.js";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -38,5 +39,19 @@ export function formatError(error: any): string {
     return typeof error.message === "string"
       ? error.message
       : JSON.stringify(error.message);
+  }
+}
+
+// Round number to 2 decimal places
+export function round2(value: number | string) {
+  // convert to decimal for accurate precision calculations then round
+  const decimalValue = new Decimal(value);
+  const rounded = decimalValue.toDecimalPlaces(2);
+  if (typeof value === "number") {
+    return rounded.toNumber();
+  } else if (typeof value === "string") {
+    return rounded.toNumber();
+  } else {
+    throw new Error("Value is not a number or a string");
   }
 }

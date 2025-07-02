@@ -35,7 +35,7 @@ async function SignInPage({
     <div className="w-full max-w-md mx-auto">
       <Card>
         <CardHeader className="space-y-2">
-          <Link href="/" className="flex-center">
+          <Link href="/" className="flex-center w-fit mx-auto">
             <Image
               src="/images/logo.svg"
               alt={`${APP_NAME} logo`}

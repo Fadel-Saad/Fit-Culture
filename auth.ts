@@ -1,12 +1,12 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { compareSync } from "bcrypt-ts-edge";
-import type { NextAuthConfig } from "next-auth";
+
 import NextAuth from "next-auth";
 import { prisma } from "@/db/prisma";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { cookies } from "next/headers";
-import { NextResponse } from "next/server";
+import { authConfig } from "./auth.config";
 
 export const config = {
   pages: {
@@ -15,7 +15,7 @@ export const config = {
   },
 
   session: {
-    strategy: "jwt",
+    strategy: "jwt" as const,
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
 
@@ -58,6 +58,9 @@ export const config = {
   ],
 
   callbacks: {
+    // get the authorize callback,
+    ...authConfig.callbacks,
+
     async session({ session, user, trigger, token }: any) {
       // set the user ID as the token subject
       session.user.id = token.sub;
@@ -96,33 +99,7 @@ export const config = {
 
       return token;
     },
-
-    // use the authorized callback which will run on every page
-    authorized({ request, auth }: any) {
-      // check for session cart cookie
-      if (!request.cookies.get("sessionCartId")) {
-        // generate new session cart id cookie
-        const sessionCartId = crypto.randomUUID();
-
-        // clone the req headers
-        const newRequestHeaders = new Headers(request.headers);
-
-        // create new response and add the new headers, then move to the next
-        // middleware or API route/page
-        const response = NextResponse.next({
-          request: {
-            headers: newRequestHeaders,
-          },
-        });
-
-        // set the newly generated sessionCartId in the response cookies
-        response.cookies.set("sessionCartId", sessionCartId);
-        return response;
-      } else {
-        return true;
-      }
-    },
   },
-} satisfies NextAuthConfig;
+};
 
 export const { handlers, auth, signIn, signOut } = NextAuth(config);

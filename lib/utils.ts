@@ -55,3 +55,21 @@ export function round2(value: number | string) {
     throw new Error("Value is not a number or a string");
   }
 }
+
+// Format currency to US locale using the Intl.NumberFormat JS built-in constructor
+const CURRENCY_FORMATTER = new Intl.NumberFormat("en-US", {
+  currency: "USD",
+  style: "currency",
+  minimumFractionDigits: 2,
+});
+
+// Formats currency using CURRENCY_FORMATTER based on input type
+export function formatCurrency(amount: number | string | null) {
+  if (typeof amount === "number") {
+    return CURRENCY_FORMATTER.format(amount);
+  } else if (typeof amount === "string") {
+    return CURRENCY_FORMATTER.format(Number(amount));
+  } else {
+    return "NaN";
+  }
+}

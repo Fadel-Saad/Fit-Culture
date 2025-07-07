@@ -61,23 +61,11 @@ export const config = {
     // get the authorize callback,
     ...authConfig.callbacks,
 
-    async session({ session, user, trigger, token }: any) {
-      // set the user ID as the token subject
-      session.user.id = token.sub;
-      session.user.role = token.role;
-      session.user.name = token.name;
-
-      // if there is an update of username in profile section(&DB), then update it in session
-      if (trigger === "update") {
-        session.user.name = user.name;
-      }
-      return session;
-    },
-
     // add jwt callback to add user role and a name if no name entered by user after sign-in since token only contains email and password by default
     async jwt({ token, user, trigger, session }: any) {
       // Assign user fields to token
       if (user) {
+        token.id = user.id;
         token.role = user.role;
 
         // If user has no name, use email as their default name
@@ -90,6 +78,31 @@ export const config = {
             data: { name: token.name },
           });
         }
+
+        // Persist cart when a guest with a cart logs in
+        if (trigger === "signIn" || trigger === "signUp") {
+          const cookiesObject = await cookies();
+          const sessionCartId = cookiesObject.get("sessionCartId")?.value;
+
+          if (sessionCartId) {
+            const sessionCart = await prisma.cart.findFirst({
+              where: { sessionCartId: sessionCartId },
+            });
+
+            if (sessionCart) {
+              // Overwrite any existing user cart
+              await prisma.cart.deleteMany({
+                where: { userId: user.id },
+              });
+
+              // Assign the guest cart to the logged-in user
+              await prisma.cart.update({
+                where: { id: sessionCart.id },
+                data: { userId: user.id },
+              });
+            }
+          }
+        }
       }
 
       // Handle session updates (e.g., name change)
@@ -98,6 +111,19 @@ export const config = {
       }
 
       return token;
+    },
+
+    async session({ session, user, trigger, token }: any) {
+      // set the user ID as the token subject
+      session.user.id = token.sub;
+      session.user.role = token.role;
+      session.user.name = token.name;
+
+      // if there is an update of username in profile section(&DB), then update it in session
+      if (trigger === "update") {
+        session.user.name = user.name;
+      }
+      return session;
     },
   },
 };

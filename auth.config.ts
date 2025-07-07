@@ -10,6 +10,24 @@ export const authConfig = {
   callbacks: {
     // use the authorized callback which will run on every page
     authorized({ request, auth }: any) {
+      // Array of regex patterns of protected paths
+      const protectedPaths = [
+        /\/shipping-address/,
+        /\/payment-method/,
+        /\/place-order/,
+        /\/profile/,
+        /\/user\/(.*)/,
+        /\/order\/(.*)/,
+        /\/admin/,
+      ];
+
+      // Get pathname from the req URL object
+      const { pathname } = request.nextUrl;
+
+      // Check if user is not authenticated and on a protected path
+      // Redirects to sign-in page through the authentication logic when false is returned
+      if (!auth && protectedPaths.some((p) => p.test(pathname))) return false;
+
       // check for session cart cookie
       if (!request.cookies.get("sessionCartId")) {
         // generate new session cart id cookie

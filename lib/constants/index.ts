@@ -12,3 +12,7 @@ export const shippingAddressDefaultValues = {
   postalCode: "",
   country: "",
 };
+
+export const DEFAULT_PAYMENT_METHOD = "CashOnDelivery";
+
+export const PAYMENT_METHODS = ["CashOnDelivery", "WhishMoney"];

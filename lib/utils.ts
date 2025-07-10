@@ -73,3 +73,46 @@ export function formatCurrency(amount: number | string | null) {
     return "NaN";
   }
 }
+
+// Shorten ID.
+export function formatId(id: string) {
+  return `..${id.substring(id.length - 6)}`;
+}
+/* 
+  const id1 = '439dde63-541a-4cc9-891a-ffeae193abc0';
+  console.log(formatId(id1)); // Expected: "..93abc0"
+*/
+
+// "Simple" fn to format DateTime, date only, and time only that are of Date type in a presentable way
+export const formatDateTime = (dateString: Date) => {
+  const dateTimeOptions: Intl.DateTimeFormatOptions = {
+    month: "short", // abbreviated month name (e.g., 'Oct')
+    year: "numeric", // abbreviated year name (e.g., '2023')
+    day: "numeric", // numeric day of the month (e.g., '25')
+    hour: "numeric", // numeric hour (e.g., '8')
+    minute: "numeric", // numeric minute (e.g., '30')
+    hour12: true, // use 12-hour clock (true) or 24-hour clock (false)
+  };
+  const dateOptions: Intl.DateTimeFormatOptions = {
+    weekday: "short", // abbreviated weekday name (e.g., 'Mon')
+    month: "short", // abbreviated month name (e.g., 'Oct')
+    year: "numeric", // numeric year (e.g., '2023')
+    day: "numeric", // numeric day of the month (e.g., '25')
+  };
+  const timeOptions: Intl.DateTimeFormatOptions = {
+    hour: "numeric", // numeric hour (e.g., '8')
+    minute: "numeric", // numeric minute (e.g., '30')
+    hour12: true, // use 12-hour clock (true) or 24-hour clock (false)
+  };
+  const formattedDateTime: string = new Date(dateString).toLocaleString(
+    "en-US",
+    dateTimeOptions
+  );
+  const formattedDate: string = new Date(dateString).toLocaleString("en-US", dateOptions);
+  const formattedTime: string = new Date(dateString).toLocaleString("en-US", timeOptions);
+  return {
+    dateTime: formattedDateTime,
+    dateOnly: formattedDate,
+    timeOnly: formattedTime,
+  };
+};

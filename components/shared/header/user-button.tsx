@@ -49,6 +49,21 @@ async function UserButton() {
             </div>
           </DropdownMenuLabel>
 
+          {/* Profile */}
+          <DropdownMenuItem>
+            <Link className="w-full" href="/user/profile">
+              User Profile
+            </Link>
+          </DropdownMenuItem>
+
+          {/* Orders */}
+          <DropdownMenuItem>
+            <Link className="w-full" href="/user/orders">
+              Order History
+            </Link>
+          </DropdownMenuItem>
+
+          {/* sign out */}
           <DropdownMenuItem className="p-0 mb-1">
             <form action={signOutUser} className="w-full">
               <Button

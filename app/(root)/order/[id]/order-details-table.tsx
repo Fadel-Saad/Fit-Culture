@@ -15,8 +15,11 @@ import { toast } from "sonner";
 import { formatCurrency, formatDateTime, formatId } from "@/lib/utils";
 import Image from "next/image";
 import Link from "next/link";
+import { updateOrderToPaidByCOD, deliverOrder } from "@/lib/actions/order.actions";
+import { Button } from "@/components/ui/button";
+import { useTransition } from "react";
 
-function OrderDetailsTable({ order }: { order: Order }) {
+function OrderDetailsTable({ order, isAdmin }: { order: Order; isAdmin: boolean }) {
   const {
     shippingAddress,
     orderItems,
@@ -30,6 +33,57 @@ function OrderDetailsTable({ order }: { order: Order }) {
     isDelivered,
     deliveredAt,
   } = order;
+
+  // Button To mark the order as paid
+  const MarkAsPaidButton = () => {
+    const [isPending, startTransition] = useTransition();
+
+    return (
+      <Button
+        type="button"
+        disabled={isPending}
+        className="cursor-pointer"
+        onClick={() =>
+          startTransition(async () => {
+            const res = await updateOrderToPaidByCOD(order.id);
+
+            if (res.success) {
+              toast(res.message);
+            } else {
+              toast.error(res.message);
+            }
+          })
+        }
+      >
+        {isPending ? "processing..." : "Mark As Paid"}
+      </Button>
+    );
+  };
+
+  // Button To mark the order as delivered
+  const MarkAsDeliveredButton = () => {
+    const [isPending, startTransition] = useTransition();
+    return (
+      <Button
+        type="button"
+        disabled={isPending}
+        className="cursor-pointer"
+        onClick={() =>
+          startTransition(async () => {
+            const res = await deliverOrder(order.id);
+
+            if (res.success) {
+              toast(res.message);
+            } else {
+              toast.error(res.message);
+            }
+          })
+        }
+      >
+        {isPending ? "processing..." : "Mark As Delivered"}
+      </Button>
+    );
+  };
 
   return (
     <>
@@ -128,6 +182,11 @@ function OrderDetailsTable({ order }: { order: Order }) {
                 <div>Total</div>
                 <div>{formatCurrency(totalPrice)}</div>
               </div>
+              {/* Cash On Delivery */}
+              {isAdmin && !isPaid && paymentMethod === "CashOnDelivery" && (
+                <MarkAsPaidButton />
+              )}
+              {isAdmin && isPaid && !isDelivered && <MarkAsDeliveredButton />}
             </CardContent>
           </Card>
         </div>

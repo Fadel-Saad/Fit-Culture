@@ -1,4 +1,3 @@
-import { auth } from "@/auth";
 import { Metadata } from "next";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getOrderSummary } from "@/lib/actions/order.actions";
@@ -13,16 +12,16 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import Link from "next/link";
+import Charts from "./charts";
+import { requireAdmin } from "@/lib/auth-guard";
 
 export const metadata: Metadata = {
   title: "Admin Dashboard",
 };
 
 async function AdminOverviewPage() {
-  const session = await auth();
-
-  // Make sure the user is an admin
-  if (session?.user.role !== "admin") throw new Error("admin permission required");
+  // If user role is not admin, redirect
+  await requireAdmin();
 
   // Get order summary
   const summary = await getOrderSummary();
@@ -75,7 +74,13 @@ async function AdminOverviewPage() {
           <CardHeader>
             <CardTitle>Overview</CardTitle>
           </CardHeader>
-          <CardContent className="pl-2">{/* CHART */}</CardContent>
+          <CardContent className="pl-2">
+            <Charts
+              data={{
+                salesData: summary.salesData,
+              }}
+            />
+          </CardContent>
         </Card>
         <Card className="col-span-2 lg:col-span-3">
           <CardHeader>

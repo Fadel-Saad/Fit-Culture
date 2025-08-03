@@ -39,12 +39,12 @@ async function AdminOrdersPage({
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>ID</TableHead>
-              <TableHead>DATE</TableHead>
-              <TableHead>TOTAL</TableHead>
-              <TableHead>PAID</TableHead>
-              <TableHead>DELIVERED</TableHead>
-              <TableHead>ACTIONS</TableHead>
+              <TableHead className="text-muted-foreground">ID</TableHead>
+              <TableHead className="text-muted-foreground">DATE</TableHead>
+              <TableHead className="text-muted-foreground">TOTAL</TableHead>
+              <TableHead className="text-muted-foreground">PAID</TableHead>
+              <TableHead className="text-muted-foreground">DELIVERED</TableHead>
+              <TableHead className="text-muted-foreground">ACTIONS</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>

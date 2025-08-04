@@ -51,7 +51,7 @@ function ProductForm({
       if (!res.success) {
         toast.error(res.message);
       } else {
-        toast(res.message);
+        toast.success(res.message);
         router.push(`/admin/products`);
       }
     }
@@ -66,6 +66,7 @@ function ProductForm({
       if (!res.success) {
         toast.error(res.message);
       } else {
+        toast.success(res.message);
         router.push(`/admin/products`);
       }
     }

@@ -22,25 +22,39 @@ export const metadata: Metadata = {
 async function AdminOrdersPage({
   searchParams,
 }: {
-  searchParams: Promise<{ page: string }>;
+  searchParams: Promise<{ page: string; query: string }>;
 }) {
-  const { page = "1" } = await searchParams;
+  const { page = "1", query: searchText } = await searchParams;
 
   await requireAdmin();
 
   const orders = await getAllOrders({
     page: Number(page),
+    query: searchText,
   });
 
   return (
     <div className="space-y-2">
-      <h2 className="h2-bold">Orders</h2>
+      <div className="flex items-center gap-3">
+        <h1 className="h2-bold">Orders</h1>
+        {searchText && (
+          <div>
+            Filtered by <i>&quot;{searchText}&quot;</i>{" "}
+            <Link href={`/admin/orders`}>
+              <Button variant="outline" size="sm" className="cursor-pointer">
+                Remove Filter
+              </Button>
+            </Link>
+          </div>
+        )}
+      </div>
       <div className="overflow-x-auto">
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead className="text-muted-foreground">ID</TableHead>
               <TableHead className="text-muted-foreground">DATE</TableHead>
+              <TableHead className="text-muted-foreground">Buyer</TableHead>
               <TableHead className="text-muted-foreground">TOTAL</TableHead>
               <TableHead className="text-muted-foreground">PAID</TableHead>
               <TableHead className="text-muted-foreground">DELIVERED</TableHead>
@@ -52,6 +66,7 @@ async function AdminOrdersPage({
               <TableRow key={order.id}>
                 <TableCell>{formatId(order.id)}</TableCell>
                 <TableCell>{formatDateTime(order.createdAt).dateTime}</TableCell>
+                <TableCell>{order.user.name}</TableCell>
                 <TableCell>{formatCurrency(order.totalPrice)}</TableCell>
                 <TableCell>
                   {order.isPaid && order.paidAt

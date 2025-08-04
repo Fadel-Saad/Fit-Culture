@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { convertToPlainObject, formatError } from "../utils";
 import { insertProductSchema, updateProductSchema } from "../validator";
 import z from "zod";
+import { Prisma } from "../generated/prisma";
 
 // get latest products
 export async function getLatestProducts() {
@@ -47,12 +48,26 @@ export async function getAllProducts({
   query: string;
   limit?: number;
   page: number;
-  category: string;
+  category?: string;
 }) {
   // limit - The maximum number of products to retrieve per page (defaulted to PAGE_SIZE).
 
+  // Query filter
+  const queryFilter: Prisma.ProductWhereInput =
+    query && query !== "all"
+      ? {
+          name: {
+            contains: query,
+            mode: "insensitive",
+          } as Prisma.StringFilter,
+        }
+      : {};
+
   const data = await prisma.product.findMany({
     // paginating the results by skipping products depending on current page
+    where: {
+      ...queryFilter,
+    },
     orderBy: { createdAt: "desc" },
     skip: (page - 1) * limit,
     take: limit,

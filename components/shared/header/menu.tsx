@@ -10,6 +10,7 @@ import {
   SheetTrigger,
 } from "@/components/ui/sheet";
 import UserButton from "./user-button";
+import Search from "./search";
 
 function Menu() {
   return (
@@ -29,6 +30,9 @@ function Menu() {
             <EllipsisVertical />
           </SheetTrigger>
           <SheetContent className="flex flex-col items-start p-6">
+            <div className="mt-10">
+              <Search />
+            </div>
             <SheetTitle>Menu</SheetTitle>
             <ThemeToggle />
             <Button asChild variant="ghost">

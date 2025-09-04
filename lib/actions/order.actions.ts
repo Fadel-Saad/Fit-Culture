@@ -12,6 +12,7 @@ import { PAGE_SIZE } from "../constants";
 import { Decimal } from "@prisma/client/runtime/library";
 import { revalidatePath } from "next/cache";
 import { Prisma } from "../generated/prisma";
+import { sendPurchaseReceipt } from "@/email";
 
 // Create Order
 export async function createOrder() {
@@ -311,13 +312,13 @@ export async function updateOrderToPaid({
 
   if (!updatedOrder) throw new Error("Order not found");
 
-  // sendPurchaseReceipt({
-  //   order: {
-  //     ...updatedOrder,
-  //     shippingAddress: updatedOrder.shippingAddress as ShippingAddress,
-  //     paymentResult: updatedOrder.paymentResult as PaymentResult,
-  //   },
-  // });
+  sendPurchaseReceipt({
+    order: {
+      ...updatedOrder,
+      shippingAddress: updatedOrder.shippingAddress as ShippingAddress,
+      paymentResult: updatedOrder.paymentResult as PaymentResult,
+    },
+  });
 }
 
 // Update CoD order to paid(admin)

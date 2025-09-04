@@ -18,8 +18,17 @@ import Link from "next/link";
 import { updateOrderToPaidByCOD, deliverOrder } from "@/lib/actions/order.actions";
 import { Button } from "@/components/ui/button";
 import { useTransition } from "react";
+import StripePayment from "./stripe-payment";
 
-function OrderDetailsTable({ order, isAdmin }: { order: Order; isAdmin: boolean }) {
+function OrderDetailsTable({
+  order,
+  isAdmin,
+  stripeClientSecret,
+}: {
+  order: Order;
+  isAdmin: boolean;
+  stripeClientSecret: string | null;
+}) {
   const {
     shippingAddress,
     orderItems,
@@ -182,6 +191,16 @@ function OrderDetailsTable({ order, isAdmin }: { order: Order; isAdmin: boolean 
                 <div>Total</div>
                 <div>{formatCurrency(totalPrice)}</div>
               </div>
+
+              {/* Stripe Payment */}
+              {!isPaid && paymentMethod === "Stripe" && stripeClientSecret && (
+                <StripePayment
+                  priceInCents={Number(order.totalPrice) * 100}
+                  orderId={order.id}
+                  clientSecret={stripeClientSecret}
+                />
+              )}
+
               {/* Cash On Delivery */}
               {isAdmin && !isPaid && paymentMethod === "CashOnDelivery" && (
                 <MarkAsPaidButton />

@@ -15,7 +15,7 @@ export const shippingAddressDefaultValues = {
 
 export const DEFAULT_PAYMENT_METHOD = "CashOnDelivery";
 
-export const PAYMENT_METHODS = ["CashOnDelivery", "WhishMoney"];
+export const PAYMENT_METHODS = ["CashOnDelivery", "Stripe", "WhishMoney"];
 
 // order history number of orders
 export const PAGE_SIZE = Number(process.env.PAGE_SIZE) || 12;

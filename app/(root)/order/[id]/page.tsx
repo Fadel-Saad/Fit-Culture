@@ -1,5 +1,5 @@
 import { getOrderById } from "@/lib/actions/order.actions";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Metadata } from "next";
 import OrderDetailsTable from "./order-details-table";
 import { ShippingAddress } from "@/types";
@@ -17,6 +17,11 @@ async function OrderDetailsPage({ params }: { params: Promise<{ id: string }> })
   if (!order) notFound();
 
   const session = await auth();
+
+  // Redirect the user if they don't own the order
+  if (order.userId !== session?.user.id && session?.user.role !== "admin") {
+    return redirect("/unauthorized");
+  }
 
   // handle stripe payment
 

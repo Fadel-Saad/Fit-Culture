@@ -222,16 +222,31 @@ function ProductForm({
                 <Card className="py-0">
                   <CardContent className="space-y-2 mt-2 min-h-48">
                     <div className="flex-start space-x-2">
-                      {images.map((image: string) => (
-                        <Image
-                          key={image}
-                          src={image}
-                          alt="product image"
-                          className="w-20 h-20 object-cover object-center rounded-sm"
-                          width={100}
-                          height={100}
-                        />
+                      {images.map((image: string, idx: number) => (
+                        <div key={image} className="relative inline-block">
+                          <Image
+                            src={image}
+                            alt="product image"
+                            className="w-20 h-20 object-cover object-center rounded-sm"
+                            width={100}
+                            height={100}
+                          />
+                          <Button
+                            type="button"
+                            size="sm"
+                            variant="destructive"
+                            className="absolute top-0 right-0 w-4 h-4 rounded-full p-1 text-xs cursor-pointer"
+                            onClick={() => {
+                              // Remove the image from the array
+                              const newImages = images.filter((_, i) => i !== idx);
+                              form.setValue("images", newImages);
+                            }}
+                          >
+                            &times;
+                          </Button>
+                        </div>
                       ))}
+
                       <FormControl>
                         <UploadButton
                           endpoint="imageUploader"

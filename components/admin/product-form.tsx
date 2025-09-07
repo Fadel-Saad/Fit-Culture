@@ -287,7 +287,7 @@ function ProductForm({
                 <Image
                   src={banner}
                   alt="banner image"
-                  className=" w-full object-cover object-center rounded-sm"
+                  className="w-full object-cover object-center rounded-sm"
                   width={1920}
                   height={680}
                 />
@@ -295,8 +295,8 @@ function ProductForm({
               {isFeatured && !banner && (
                 <UploadButton
                   endpoint="imageUploader"
-                  onClientUploadComplete={(res: { ufsUrl: string }[]) => {
-                    form.setValue("banner", res[0].ufsUrl);
+                  onClientUploadComplete={(res: { url: string }[]) => {
+                    form.setValue("banner", res[0].url);
                   }}
                   onUploadError={(error: Error) => {
                     toast.error(`ERROR! ${error.message}`);

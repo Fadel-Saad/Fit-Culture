@@ -4,7 +4,7 @@ import { DollarSign, Headset, ShoppingBag, WalletCards } from "lucide-react";
 function IconBoxes() {
   return (
     <div>
-      <Card>
+      <Card className="p-0">
         <CardContent className="grid gap-4 md:grid-cols-4 p-4 ">
           <div className="space-y-2">
             <ShoppingBag />
